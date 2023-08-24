@@ -1,0 +1,47 @@
+document.addEventListener("DOMContentLoaded", () => {
+    const display = document.getElementById("display");
+    const buttons = document.querySelectorAll(".btn[data-key]");
+    const clearButton = document.getElementById("clear");
+    const calculateButton = document.getElementById("calculate");
+
+    let currentExpression = "";
+
+    buttons.forEach(button => {
+        button.addEventListener("click", () => {
+            const key = button.getAttribute("data-key");
+            currentExpression += key;
+            display.value = currentExpression;
+        });
+    });
+
+    clearButton.addEventListener("click", () => {
+        currentExpression = "";
+        display.value = "";
+    });
+
+    calculateButton.addEventListener("click", () => {
+        try {
+            const result = eval(currentExpression);
+            display.value = result;
+            currentExpression = result.toString();
+        } catch (error) {
+            display.value = "Error";
+            currentExpression = "";
+        }
+    });
+
+    // Handle keyboard events
+    document.addEventListener("keydown", event => {
+        const key = event.key;
+        if (/[\d+\-*/%=]/.test(key)) {
+            currentExpression += key;
+            display.value = currentExpression;
+        } else if (key === "Enter") {
+            calculateButton.click();
+        } else if (key === "Escape") {
+            clearButton.click();
+        } else {
+            alert("Only numbers and operators are allowed.");
+        }
+    });
+});
